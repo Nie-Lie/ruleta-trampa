@@ -118,7 +118,8 @@
         } else {
           // Redibujar la ruleta final para asegurar visibilidad
           ctx.clearRect(0, 0, canvas.width, canvas.height);
-          drawRuleta((anguloFinal % 360) * Math.PI / 180);
+          drawRuleta(((anguloGanar % 360) * Math.PI) / 180);
+
 
           // Mostrar resultado y lanzar confeti
           lanzarConfeti();
