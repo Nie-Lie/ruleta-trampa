@@ -48,7 +48,7 @@
   <button onclick="girarRuleta()">Girar</button>
   <div id="resultado"></div>
 
-  <!-- 🎉 Librería de confeti desde CDN -->
+  <!-- 🎉 Confetti CDN -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
@@ -84,7 +84,7 @@
         ctx.rotate(angle + slice / 2);
         ctx.fillStyle = "#000";
         ctx.font = "15px sans-serif";
-        ctx.fillText(opciones[i], 35, 10); // texto más centrado
+        ctx.fillText(opciones[i], 35, 10);
         ctx.restore();
       }
     }
@@ -98,8 +98,6 @@
       const vueltas = 10;
       const espacioGanar = 4; // "Cita con Pachuca 💘"
       const anguloPorOpcion = 360 / opciones.length;
-
-      // 🔄 Calculamos para que "Cita con Pachuca" quede justo debajo de la flecha
       const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
       const anguloFinal = vueltas * 360 + anguloGanar;
 
@@ -118,14 +116,16 @@
         if (progreso < 1) {
           requestAnimationFrame(animarRotacion);
         } else {
-          // 🎉 Lanzar confeti y mostrar mensaje final
-          setTimeout(() => {
-            lanzarConfeti();
-            resultado.innerHTML = `
-              Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br><br>
-              <span style="font-size: 28px;">¿Será destino?</span>
-            `;
-          }, 500);
+          // Redibujar la ruleta final para asegurar visibilidad
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          drawRuleta((anguloFinal % 360) * Math.PI / 180);
+
+          // Mostrar resultado y lanzar confeti
+          lanzarConfeti();
+          resultado.innerHTML = `
+            Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br><br>
+            <span style="font-size: 28px;">¿Será destino?</span>
+          `;
         }
       }
 
