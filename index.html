@@ -33,7 +33,7 @@
     #flecha {
       font-size: 40px;
       position: absolute;
-      top: 215px;
+      top: 125px; /* Subida exacta */
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
@@ -92,15 +92,14 @@
       const resultado = document.getElementById("resultado");
       resultado.textContent = "";
 
-      let start = 0;
       const vueltas = 10;
-      const espacioGanar = 4; // "Cita con Pachuca"
+      const espacioGanar = 4; // "Cita con Pachuca 💘"
       const anguloPorOpcion = 360 / opciones.length;
 
-      // 🔥 Importante: la flecha está arriba (0°), así que giramos ruleta hasta que "Cita con Pachuca" quede arriba
-      const anguloGanar = 360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2);
-
+      // 🎯 Calculamos para que "Cita con Pachuca" quede justo arriba (0°)
+      const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
       const anguloFinal = vueltas * 360 + anguloGanar;
+
       const duracion = 5000;
       const startTime = performance.now();
 
@@ -108,7 +107,7 @@
         const elapsed = timestamp - startTime;
         const progreso = Math.min(elapsed / duracion, 1);
         const easeOut = 1 - Math.pow(1 - progreso, 3);
-        const currentAngle = (start + easeOut * anguloFinal) % 360;
+        const currentAngle = (easeOut * anguloFinal) % 360;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawRuleta((currentAngle * Math.PI) / 180);
