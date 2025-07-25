@@ -1,143 +1,147 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Ruleta con trampa 🤭</title>
-<style>
-  body {
-    font-family: sans-serif;
-    text-align: center;
-    background: #f0f0f0;
-    padding-top: 50px;
-    position: relative;
-  }
-  canvas {
-    border: 4px solid #444;
-    border-radius: 50%;
-    background: white;
-  }
-  button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 18px;
-    border: none;
-    border-radius: 10px;
-    background: #1e90ff;
-    color: white;
-    cursor: pointer;
-  }
-  #resultado {
-    font-size: 24px;
-    margin-top: 30px;
-  }
-  #flecha {
-    font-size: 30px;
-    position: absolute;
-    top: 125px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    user-select: none;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Ruleta con trampa 🤭</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+      padding-top: 50px;
+      position: relative;
+    }
+    canvas {
+      border: 4px solid #444;
+      border-radius: 50%;
+      background: white;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #1e90ff;
+      color: white;
+      cursor: pointer;
+    }
+    #resultado {
+      font-size: 24px;
+      margin-top: 30px;
+    }
+    #flecha {
+      font-size: 40px;
+      position: absolute;
+      top: 125px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      user-select: none;
+    }
+  </style>
 </head>
 <body>
-<div id="flecha">🔻</div>
-<h1>🎡 Ruleta del destino</h1>
-<canvas id="ruleta" width="400" height="400"></canvas>
-<br />
-<button onclick="girarRuleta()" id="btnGirar">Girar</button>
-<div id="resultado"></div>
+  <div id="flecha">🔻</div>
+  <h1>🎡 Ruleta del destino</h1>
+  <canvas id="ruleta" width="400" height="400"></canvas>
+  <br />
+  <button onclick="girarRuleta()" id="btnGirar">Girar</button>
+  <div id="resultado"></div>
 
-<script>
-  const canvas = document.getElementById('ruleta');
-  const ctx = canvas.getContext('2d');
-  const btnGirar = document.getElementById('btnGirar');
-  const resultado = document.getElementById('resultado');
+  <script>
+    const canvas = document.getElementById('ruleta');
+    const ctx = canvas.getContext('2d');
+    const btnGirar = document.getElementById('btnGirar');
+    const resultado = document.getElementById('resultado');
 
-  const opciones = [
-    "Toma agua 💧",
-    "Haz 5 sentadillas 🏋️‍♂️",
-    "Canta una canción 🎤",
-    "Manda un sticker 😂",
-    "Cita con Pachuca 💘",
-    "Habla como robot 🤖",
-    "Cuenta un chisme 🫢",
-    "Haz una rima 🎶"
-  ];
+    const opciones = [
+      "Toma agua 💧",
+      "Haz 5 sentadillas 🏋️‍♂️",
+      "Canta una canción 🎤",
+      "Manda un sticker 😂",
+      "Cita con Pachuca 💘",
+      "Habla como robot 🤖",
+      "Cuenta un chisme 🫢",
+      "Haz una rima 🎶"
+    ];
 
-  const colores = [
-    "#FF6384",
-    "#36A2EB",
-    "#FFCE56",
-    "#4BC0C0",
-    "#9966FF",
-    "#FF9F40",
-    "#C9CBCF",
-    "#FF6666"
-  ];
+    const colores = [
+      "#FF6384",
+      "#36A2EB",
+      "#FFCE56",
+      "#4BC0C0",
+      "#9966FF",
+      "#FF9F40",
+      "#C9CBCF",
+      "#FF6666"
+    ];
 
-  function drawRuleta(startAngle = 0) {
-    const slice = (2 * Math.PI) / opciones.length;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (let i = 0; i < opciones.length; i++) {
-      const angle = startAngle + i * slice;
-      ctx.beginPath();
-      ctx.moveTo(200, 200);
-      ctx.arc(200, 200, 200, angle, angle + slice);
-      ctx.fillStyle = colores[i];
-      ctx.fill();
-      ctx.stroke();
+    function drawRuleta(startAngle = 0) {
+      const slice = (2 * Math.PI) / opciones.length;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < opciones.length; i++) {
+        const angle = startAngle + i * slice;
+        ctx.beginPath();
+        ctx.moveTo(200, 200);
+        ctx.arc(200, 200, 200, angle, angle + slice);
+        ctx.fillStyle = colores[i];
+        ctx.fill();
+        ctx.stroke();
 
-      ctx.save();
-      ctx.translate(200, 200);
-      ctx.rotate(angle + slice / 2);
-      ctx.fillStyle = "#000";
-      ctx.font = "15px sans-serif";
-      ctx.fillText(opciones[i], 35, 10);
-      ctx.restore();
-    }
-  }
-
-  drawRuleta();
-
-  function girarRuleta() {
-    btnGirar.disabled = true;
-    resultado.textContent = "";
-
-    const vueltas = 10;
-    const espacioGanar = 4; // índice "Cita con Pachuca"
-    const anguloPorOpcion = 360 / opciones.length;
-
-    const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
-    const anguloFinal = vueltas * 360 + anguloGanar;
-
-    const duracion = 5000;
-    const startTime = performance.now();
-
-    function animarRotacion(timestamp) {
-      const elapsed = timestamp - startTime;
-      const progreso = Math.min(elapsed / duracion, 1);
-      const easeOut = 1 - Math.pow(1 - progreso, 3);
-      const currentAngle = easeOut * anguloFinal;
-
-      drawRuleta((currentAngle * Math.PI) / 180);
-
-      if (progreso < 1) {
-        requestAnimationFrame(animarRotacion);
-      } else {
-        drawRuleta((anguloGanar * Math.PI) / 180);
-
-        resultado.innerHTML = `
-          Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br /><br />
-          <span style="font-size: 28px;">¿Será destino?</span>
-        `;
-        btnGirar.disabled = false;
+        ctx.save();
+        ctx.translate(200, 200);
+        ctx.rotate(angle + slice / 2);
+        ctx.fillStyle = "#000";
+        ctx.font = "15px sans-serif";
+        ctx.fillText(opciones[i], 60, 10);
+        ctx.restore();
       }
     }
 
-    requestAnimationFrame(animarRotacion);
-  }
-</script>
+    drawRuleta();
+
+    function girarRuleta() {
+      btnGirar.disabled = true;
+      resultado.textContent = "";
+
+      const vueltas = 10;
+      const espacioGanar = 4; // índice "Cita con Pachuca"
+      const anguloPorOpcion = 360 / opciones.length;
+
+      const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
+      const anguloFinal = vueltas * 360 + anguloGanar;
+
+      const duracion = 5000;
+      const startTime = performance.now();
+
+      function animarRotacion(timestamp) {
+        const elapsed = timestamp - startTime;
+        const progreso = Math.min(elapsed / duracion, 1);
+        const easeOut = 1 - Math.pow(1 - progreso, 3);
+        const currentAngle = easeOut * anguloFinal;
+
+        drawRuleta((currentAngle * Math.PI) / 180);
+
+        if (progreso < 1) {
+          requestAnimationFrame(animarRotacion);
+        } else {
+          // Dibujar ruleta en ángulo final
+          drawRuleta((anguloGanar * Math.PI) / 180);
+
+          // Mostrar mensaje final justo al terminar
+          setTimeout(() => {
+            resultado.innerHTML = `
+              Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br /><br />
+              <span style="font-size: 28px;">¿Será destino?</span>
+            `;
+            btnGirar.disabled = false;
+          }, 300); // pequeño delay para asegurar se vea el dibujo final
+        }
+      }
+
+      requestAnimationFrame(animarRotacion);
+    }
+  </script>
 </body>
 </html>
