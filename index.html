@@ -33,7 +33,7 @@
     #flecha {
       font-size: 30px;
       position: absolute;
-      top: 125px; /* Subida exacta */
+      top: 125px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
@@ -47,6 +47,9 @@
   <br>
   <button onclick="girarRuleta()">Girar</button>
   <div id="resultado"></div>
+
+  <!-- 🎉 Librería de confeti desde CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
     const canvas = document.getElementById('ruleta');
@@ -81,7 +84,7 @@
         ctx.rotate(angle + slice / 2);
         ctx.fillStyle = "#000";
         ctx.font = "15px sans-serif";
-        ctx.fillText(opciones[i], 30, 10);
+        ctx.fillText(opciones[i], 35, 10); // texto más centrado
         ctx.restore();
       }
     }
@@ -96,7 +99,7 @@
       const espacioGanar = 4; // "Cita con Pachuca 💘"
       const anguloPorOpcion = 360 / opciones.length;
 
-      // 🎯 Calculamos para que "Cita con Pachuca" quede justo arriba (0°)
+      // 🔄 Calculamos para que "Cita con Pachuca" quede justo debajo de la flecha
       const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
       const anguloFinal = vueltas * 360 + anguloGanar;
 
@@ -115,16 +118,26 @@
         if (progreso < 1) {
           requestAnimationFrame(animarRotacion);
         } else {
+          // 🎉 Lanzar confeti y mostrar mensaje final
           setTimeout(() => {
+            lanzarConfeti();
             resultado.innerHTML = `
               Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br><br>
               <span style="font-size: 28px;">¿Será destino?</span>
             `;
-          }, 3000);
+          }, 500);
         }
       }
 
       requestAnimationFrame(animarRotacion);
+    }
+
+    function lanzarConfeti() {
+      confetti({
+        particleCount: 100,
+        spread: 90,
+        origin: { y: 0.3 }
+      });
     }
   </script>
 </body>
