@@ -29,9 +29,10 @@
     #resultado {
       font-size: 24px;
       margin-top: 30px;
+      min-height: 60px;
     }
     #flecha {
-      font-size: 40px;
+      font-size: 30px;
       position: absolute;
       top: 125px;
       left: 50%;
@@ -46,14 +47,14 @@
   <h1>🎡 Ruleta del destino</h1>
   <canvas id="ruleta" width="400" height="400"></canvas>
   <br />
-  <button onclick="girarRuleta()" id="btnGirar">Girar</button>
+  <button id="btnGirar">Girar</button>
   <div id="resultado"></div>
 
   <script>
-    const canvas = document.getElementById('ruleta');
-    const ctx = canvas.getContext('2d');
-    const btnGirar = document.getElementById('btnGirar');
-    const resultado = document.getElementById('resultado');
+    const canvas = document.getElementById("ruleta");
+    const ctx = canvas.getContext("2d");
+    const btnGirar = document.getElementById("btnGirar");
+    const resultado = document.getElementById("resultado");
 
     const opciones = [
       "Toma agua 💧",
@@ -77,71 +78,81 @@
       "#FF6666"
     ];
 
-    function drawRuleta(startAngle = 0) {
+    function drawRuleta(angle = 0) {
       const slice = (2 * Math.PI) / opciones.length;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < opciones.length; i++) {
-        const angle = startAngle + i * slice;
+        const startAngle = angle + i * slice;
+        const endAngle = startAngle + slice;
+
         ctx.beginPath();
         ctx.moveTo(200, 200);
-        ctx.arc(200, 200, 200, angle, angle + slice);
+        ctx.arc(200, 200, 200, startAngle, endAngle);
         ctx.fillStyle = colores[i];
         ctx.fill();
         ctx.stroke();
 
         ctx.save();
         ctx.translate(200, 200);
-        ctx.rotate(angle + slice / 2);
+        ctx.rotate(startAngle + slice / 2);
         ctx.fillStyle = "#000";
         ctx.font = "15px sans-serif";
-        ctx.fillText(opciones[i], 60, 10);
+        ctx.fillText(opciones[i], 35, 10);
         ctx.restore();
       }
     }
 
+    // Dibuja ruleta inicial
     drawRuleta();
 
-    function girarRuleta() {
+    btnGirar.addEventListener("click", () => {
       btnGirar.disabled = true;
       resultado.textContent = "";
 
       const vueltas = 10;
-      const espacioGanar = 4; // índice "Cita con Pachuca"
+      const indiceGanar = 4; // índice "Cita con Pachuca"
       const anguloPorOpcion = 360 / opciones.length;
 
-      const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
-      const anguloFinal = vueltas * 360 + anguloGanar;
+      // El ángulo final (en grados) para que "Cita con Pachuca" quede arriba (flecha)
+      // La ruleta gira en sentido horario, así que invertimos el ángulo para canvas (que gira antihorario)
+      const anguloGanarGrados = (360 - (indiceGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
+      const anguloFinalGrados = vueltas * 360 + anguloGanarGrados;
 
       const duracion = 5000;
       const startTime = performance.now();
 
-      function animarRotacion(timestamp) {
+      function animar(timestamp) {
         const elapsed = timestamp - startTime;
         const progreso = Math.min(elapsed / duracion, 1);
-        const easeOut = 1 - Math.pow(1 - progreso, 3);
-        const currentAngle = easeOut * anguloFinal;
 
-        drawRuleta((currentAngle * Math.PI) / 180);
+        // Función easing para desacelerar (ease out cubic)
+        const easeOutCubic = 1 - Math.pow(1 - progreso, 3);
+
+        // Ángulo actual en grados
+        const anguloActualGrados = easeOutCubic * anguloFinalGrados;
+
+        // Convertimos a radianes y giramos sentido antihorario (canvas)
+        const anguloActualRad = (anguloActualGrados * Math.PI) / 180;
+
+        drawRuleta(anguloActualRad);
 
         if (progreso < 1) {
-          requestAnimationFrame(animarRotacion);
+          requestAnimationFrame(animar);
         } else {
-          // Dibujar ruleta en ángulo final
-          drawRuleta((anguloGanar * Math.PI) / 180);
+          // Dibuja la ruleta en el ángulo final exacto
+          const anguloFinalRad = (anguloGanarGrados * Math.PI) / 180;
+          drawRuleta(anguloFinalRad);
 
-          // Mostrar mensaje final justo al terminar
-          setTimeout(() => {
-            resultado.innerHTML = `
-              Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br /><br />
-              <span style="font-size: 28px;">¿Será destino?</span>
-            `;
-            btnGirar.disabled = false;
-          }, 300); // pequeño delay para asegurar se vea el dibujo final
+          resultado.innerHTML = `
+            Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br /><br />
+            <span style="font-size: 28px;">¿Será destino?</span>
+          `;
+          btnGirar.disabled = false;
         }
       }
 
-      requestAnimationFrame(animarRotacion);
-    }
+      requestAnimationFrame(animar);
+    });
   </script>
 </body>
 </html>
