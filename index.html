@@ -31,7 +31,7 @@
       margin-top: 30px;
     }
     #flecha {
-      font-size: 40px;
+      font-size: 30px;
       position: absolute;
       top: 125px;
       left: 50%;
@@ -48,9 +48,6 @@
   <br />
   <button onclick="girarRuleta()" id="btnGirar">Girar</button>
   <div id="resultado"></div>
-
-  <!-- Confetti CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
   <script>
     const canvas = document.getElementById('ruleta');
@@ -82,7 +79,7 @@
 
     function drawRuleta(startAngle = 0) {
       const slice = (2 * Math.PI) / opciones.length;
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpia antes de dibujar
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
       for (let i = 0; i < opciones.length; i++) {
         const angle = startAngle + i * slice;
         ctx.beginPath();
@@ -97,29 +94,22 @@
         ctx.rotate(angle + slice / 2);
         ctx.fillStyle = "#000";
         ctx.font = "15px sans-serif";
-        ctx.fillText(opciones[i], 60, 10);
+        ctx.fillText(opciones[i], 35, 10);
         ctx.restore();
       }
     }
 
     drawRuleta();
 
-    function lanzarConfeti() {
-      confetti({
-        particleCount: 100,
-        spread: 90,
-        origin: { y: 0.3 }
-      });
-    }
-
     function girarRuleta() {
-      btnGirar.disabled = true;  // Deshabilita botón para evitar clicks múltiples
+      btnGirar.disabled = true;
       resultado.textContent = "";
+
       const vueltas = 10;
-      const espacioGanar = 4; // índice de "Cita con Pachuca"
+      const espacioGanar = 4; // índice "Cita con Pachuca"
       const anguloPorOpcion = 360 / opciones.length;
 
-      // Calcula el ángulo para que la opción quede justo arriba (flecha)
+      // Ángulo para que el sector ganador quede arriba (0°)
       const anguloGanar = (360 - (espacioGanar * anguloPorOpcion + anguloPorOpcion / 2)) % 360;
       const anguloFinal = vueltas * 360 + anguloGanar;
 
@@ -137,15 +127,15 @@
         if (progreso < 1) {
           requestAnimationFrame(animarRotacion);
         } else {
-          // Aseguramos que la ruleta quede en la posición final exacta
+          // Dibuja la ruleta en la posición final exacta
           drawRuleta((anguloGanar * Math.PI) / 180);
 
-          lanzarConfeti();
+          // Mostrar mensaje final
           resultado.innerHTML = `
             Resultado: <strong>Cita con Pachuca 💘</strong> 😏<br /><br />
             <span style="font-size: 28px;">¿Será destino?</span>
           `;
-          btnGirar.disabled = false; // Rehabilita el botón
+          btnGirar.disabled = false;
         }
       }
 
