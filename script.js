@@ -8,13 +8,12 @@ const anguloPorNumero = 360 / 8;
 const numeroTrampa = 8;
 let totalGiro = 0;
 
-btn.onclick = function () {
+btn.onclick = () => {
   btn.disabled = true;
-  mensaje.classList.add("oculto");
+  mensaje.style.display = "none";
 
   container.style.transition = "none";
 
-  // Usa requestAnimationFrame para forzar el estilo sin transición antes de la animación
   requestAnimationFrame(() => {
     container.style.transition = "transform 4s ease-out";
     totalGiro += vueltas * 360 + anguloPorNumero * (numeroTrampa - 1);
@@ -22,11 +21,11 @@ btn.onclick = function () {
   });
 
   setTimeout(() => {
-    mensaje.classList.remove("oculto");
+    mensaje.style.display = "flex";
   }, 4000);
 };
 
-acepto.onclick = function () {
-  mensaje.classList.add("oculto");
+acepto.onclick = () => {
+  mensaje.style.display = "none";
   btn.disabled = false;
 };
