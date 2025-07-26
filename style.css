@@ -12,7 +12,7 @@ html, body {
   font-family: sans-serif;
 }
 
-/* ✅ contenedor centrado correctamente */
+/* ✅ Centra la ruleta vertical y horizontalmente */
 body {
   display: flex;
   justify-content: center;
@@ -26,7 +26,6 @@ body {
   z-index: 1;
 }
 
-/* ✅ ruleta circular */
 .container {
   width: 100%;
   height: 100%;
@@ -38,6 +37,7 @@ body {
   transition: 5s;
 }
 
+/* ✅ Posicionamiento correcto de los sectores */
 .container div {
   height: 50%;
   width: 200px;
@@ -55,6 +55,7 @@ body {
   left: 135px;
 }
 
+/* ✅ Colores y rotaciones de los sectores */
 .one   { background-color: #3f51b5; left: 50%; }
 .two   { background-color: #ff9800; transform: rotate(45deg); }
 .three { background-color: #e91e63; transform: rotate(90deg); }
@@ -68,4 +69,85 @@ body {
   position: absolute;
   top: 0;
   left: 50%;
-  transform: transl
+  transform: translateX(-50%);
+  color: #fff;
+  z-index: 2;
+}
+
+.arrow::before {
+  content: "\1F817";
+  font-size: 50px;
+}
+
+#spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  background-color: #e2e2e2;
+  text-transform: uppercase;
+  border: 8px solid #fff;
+  font-weight: bold;
+  font-size: 20px;
+  color: #a2a2a2;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  cursor: pointer;
+  outline: none;
+  letter-spacing: 1px;
+}
+
+/* ✅ Modal correctamente centrado y no afecta la ruleta */
+#mensaje {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* ✅ Se oculta por clase */
+.oculto {
+  display: none !important;
+}
+
+/* ✅ Estilo interno del mensaje */
+#mensaje .contenido {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 12px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+#mensaje p {
+  font-size: 24px;
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+#mensaje button {
+  padding: 10px 25px;
+  font-size: 16px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#mensaje button:hover {
+  background-color: #303f9f;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
