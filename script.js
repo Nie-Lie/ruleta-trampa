@@ -13,7 +13,6 @@ btn.onclick = function () {
   mensaje.classList.add("oculto");
 
   container.style.transition = "none";
-
   requestAnimationFrame(() => {
     container.style.transition = "transform 4s ease-out";
     totalGiro += vueltas * 360 + anguloPorNumero * (numeroTrampa - 1);
