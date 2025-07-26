@@ -1,31 +1,27 @@
-const container = document.querySelector(".container");
-const btn = document.getElementById("spin");
+const ruleta = document.getElementById("ruleta");
+const boton = document.getElementById("spin");
 const mensaje = document.getElementById("mensaje");
 const acepto = document.getElementById("acepto");
 
-const vueltas = 5;
-const anguloPorNumero = 360 / 8;
-const numeroTrampa = 8;
-let totalGiro = 0;
+let puedeGirar = true;
 
-btn.onclick = () => {
-  btn.disabled = true;
-  mensaje.style.display = "none";
+boton.addEventListener("click", () => {
+  if (!puedeGirar) return;
 
-  container.style.transition = "none";
+  puedeGirar = false;
 
-  requestAnimationFrame(() => {
-    container.style.transition = "transform 4s ease-out";
-    totalGiro += vueltas * 360 + anguloPorNumero * (numeroTrampa - 1);
-    container.style.transform = `rotate(${totalGiro}deg)`;
-  });
+  // Ángulo donde está el espacio "Cita con Pachuca", por ejemplo el octavo (315°)
+  let targetAngle = 360 * 5 + 315; // 5 vueltas + ángulo deseado
+
+  ruleta.style.transition = "transform 4s ease-out";
+  ruleta.style.transform = `rotate(${targetAngle}deg)`;
 
   setTimeout(() => {
     mensaje.style.display = "flex";
-  }, 4000);
-};
+  }, 4200);
+});
 
-acepto.onclick = () => {
+acepto.addEventListener("click", () => {
   mensaje.style.display = "none";
-  btn.disabled = false;
-};
+  puedeGirar = true;
+});
