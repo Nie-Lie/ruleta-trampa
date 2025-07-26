@@ -1,20 +1,24 @@
 let container = document.querySelector(".container");
 let btn = document.getElementById("spin");
 
-let totalGiro = 0; // acumulador de giros
+let vueltas = 5; // Vueltas por cada click
+let anguloPorNumero = 360 / 8;
+let numeroTrampa = 8;
+let totalGiro = 0;
 
 btn.onclick = function () {
-  let vueltas = 5; // vueltas completas
-  let anguloPorNumero = 360 / 8;
-  let numeroTrampa = 8;
+  // Quitar transición para que puedas reiniciar animación si giras muy rápido
+  container.style.transition = "none";
 
-  // Ángulo exacto para caer en el número 8
-  let anguloFinal = anguloPorNumero * (numeroTrampa - 1); // 315°
+  // Esperar un frame antes de aplicar nueva transición (truco de reinicio)
+  requestAnimationFrame(() => {
+    // Agregar nueva transición
+    container.style.transition = "transform 4s ease-out";
 
-  // Sumar al total de giros
-  totalGiro += (vueltas * 360) + anguloFinal;
+    // Calcular el nuevo giro
+    totalGiro += (vueltas * 360) + (anguloPorNumero * (numeroTrampa - 1));
 
-  // Aplicar la animación
-  container.style.transition = "transform 4s ease-out";
-  container.style.transform = "rotate(" + totalGiro + "deg)";
+    // Aplicar el giro
+    container.style.transform = `rotate(${totalGiro}deg)`;
+  });
 }
