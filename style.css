@@ -12,7 +12,6 @@ html, body {
   font-family: sans-serif;
 }
 
-/* ✅ Centra la ruleta vertical y horizontalmente */
 body {
   display: flex;
   justify-content: center;
@@ -37,14 +36,13 @@ body {
   transition: 5s;
 }
 
-/* ✅ Posicionamiento correcto de los sectores */
 .container div {
   height: 50%;
   width: 200px;
   position: absolute;
   clip-path: polygon(100% 0, 50% 100%, 0 0);
-  transform: translateX(-50%);
   transform-origin: bottom;
+  transform: translateX(-50%);
   text-align: center;
   display: flex;
   align-items: center;
@@ -55,7 +53,6 @@ body {
   left: 135px;
 }
 
-/* ✅ Colores y rotaciones de los sectores */
 .one   { background-color: #3f51b5; left: 50%; }
 .two   { background-color: #ff9800; transform: rotate(45deg); }
 .three { background-color: #e91e63; transform: rotate(90deg); }
@@ -99,7 +96,7 @@ body {
   letter-spacing: 1px;
 }
 
-/* ✅ Modal correctamente centrado y no afecta la ruleta */
+/* Mensaje modal - oculto por defecto con display none */
 #mensaje {
   position: fixed;
   top: 0;
@@ -107,18 +104,16 @@ body {
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.5);
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   z-index: 999;
 }
 
-/* ✅ Se oculta por clase */
 .oculto {
   display: none !important;
 }
 
-/* ✅ Estilo interno del mensaje */
 #mensaje .contenido {
   background: white;
   padding: 20px 30px;
