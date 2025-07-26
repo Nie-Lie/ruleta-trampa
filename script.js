@@ -14,6 +14,7 @@ btn.onclick = function () {
 
   container.style.transition = "none";
 
+  // Usa requestAnimationFrame para forzar el estilo sin transición antes de la animación
   requestAnimationFrame(() => {
     container.style.transition = "transform 4s ease-out";
     totalGiro += vueltas * 360 + anguloPorNumero * (numeroTrampa - 1);
