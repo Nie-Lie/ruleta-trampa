@@ -20,7 +20,7 @@ btn.onclick = function () {
   });
 
   setTimeout(() => {
-    mensaje.style.display = "block";
+    mensaje.style.display = "flex";
   }, 4000);
 };
 
