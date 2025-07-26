@@ -10,8 +10,9 @@ boton.addEventListener("click", () => {
 
   puedeGirar = false;
 
-  const vueltas = 5;
-  const anguloFinal = vueltas * 360 + 315;
+  const vueltas = 5; // vueltas completas
+  const anguloObjetivo = 315; // sector 8 (Cita con Pachuca)
+  const anguloFinal = vueltas * 360 + anguloObjetivo;
 
   ruleta.style.transition = "transform 4s ease-out";
   ruleta.style.transform = `rotate(${anguloFinal}deg)`;
