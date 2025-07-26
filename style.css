@@ -46,14 +46,14 @@ body {
   font-weight: bold;
   font-size: 20px;
 }
-.one   { background: #3f51b5; transform: translateX(-50%) rotate(0deg); }
-.two   { background: #ff9800; transform: translateX(-50%) rotate(45deg); }
-.three { background: #e91e63; transform: translateX(-50%) rotate(90deg); }
-.four  { background: #4caf50; transform: translateX(-50%) rotate(135deg); }
-.five  { background: #009688; transform: translateX(-50%) rotate(180deg); }
-.six   { background: #795548; transform: translateX(-50%) rotate(225deg); }
-.seven { background: #9c27b0; transform: translateX(-50%) rotate(270deg); }
-.eight { background: #f44336; transform: translateX(-50%) rotate(315deg); }
+.one   { background: #3f51b5; transform: translateX(-50%) rotate(0deg);   z-index: 8; }
+.two   { background: #ff9800; transform: translateX(-50%) rotate(45deg);  z-index: 7; }
+.three { background: #e91e63; transform: translateX(-50%) rotate(90deg);  z-index: 6; }
+.four  { background: #4caf50; transform: translateX(-50%) rotate(135deg); z-index: 5; }
+.five  { background: #009688; transform: translateX(-50%) rotate(180deg); z-index: 4; }
+.six   { background: #795548; transform: translateX(-50%) rotate(225deg); z-index: 3; }
+.seven { background: #9c27b0; transform: translateX(-50%) rotate(270deg); z-index: 2; }
+.eight { background: #f44336; transform: translateX(-50%) rotate(315deg); z-index: 1; }
 #spin {
   position: absolute;
   top: 50%;
