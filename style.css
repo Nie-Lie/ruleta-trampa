@@ -3,147 +3,113 @@
   margin: 0;
   padding: 0;
 }
-
 html, body {
   height: 100%;
   width: 100%;
   overflow: hidden;
-  background-color: #34495e;
+  background: #34495e;
   font-family: sans-serif;
 }
-
 body {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .ruleta-wrapper {
   position: relative;
   width: 500px;
   height: 500px;
-  z-index: 1;
 }
-
 .container {
   width: 100%;
   height: 100%;
-  background-color: #ccc;
   border-radius: 50%;
   border: 15px solid #dde;
+  background: #ccc;
   position: relative;
   overflow: hidden;
   transition: transform 4s ease-out;
 }
-
 .container div {
-  width: 250px; /* mitad del contenedor */
-  height: 250px;
   position: absolute;
   top: 0;
   left: 50%;
-  transform-origin: 0% 100%; /* abajo-izquierda */
+  width: 250px;
+  height: 250px;
+  transform-origin: 0% 100%;
   clip-path: polygon(100% 0, 50% 100%, 0 0);
   transform: translateX(-50%) rotate(0deg);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  color: white;
   font-weight: bold;
   font-size: 20px;
-  color: white;
 }
-
-/* Sector por sector con rotación */
-.one   { background-color: #3f51b5; transform: translateX(-50%) rotate(0deg); }
-.two   { background-color: #ff9800; transform: translateX(-50%) rotate(45deg); }
-.three { background-color: #e91e63; transform: translateX(-50%) rotate(90deg); }
-.four  { background-color: #4caf50; transform: translateX(-50%) rotate(135deg); }
-.five  { background-color: #009688; transform: translateX(-50%) rotate(180deg); }
-.six   { background-color: #795548; transform: translateX(-50%) rotate(225deg); }
-.seven { background-color: #9c27b0; transform: translateX(-50%) rotate(270deg); }
-.eight { background-color: #f44336; transform: translateX(-50%) rotate(315deg); }
-
-.arrow {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #fff;
-  z-index: 2;
-}
-
-.arrow::before {
-  content: "\1F817";
-  font-size: 50px;
-}
-
+.one   { background: #3f51b5; transform: translateX(-50%) rotate(0deg); }
+.two   { background: #ff9800; transform: translateX(-50%) rotate(45deg); }
+.three { background: #e91e63; transform: translateX(-50%) rotate(90deg); }
+.four  { background: #4caf50; transform: translateX(-50%) rotate(135deg); }
+.five  { background: #009688; transform: translateX(-50%) rotate(180deg); }
+.six   { background: #795548; transform: translateX(-50%) rotate(225deg); }
+.seven { background: #9c27b0; transform: translateX(-50%) rotate(270deg); }
+.eight { background: #f44336; transform: translateX(-50%) rotate(315deg); }
 #spin {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2;
-  background-color: #e2e2e2;
-  text-transform: uppercase;
-  border: 8px solid #fff;
-  font-weight: bold;
-  font-size: 20px;
-  color: #a2a2a2;
   width: 80px;
   height: 80px;
   border-radius: 50%;
+  background: #e2e2e2;
+  border: 8px solid white;
+  font-weight: bold;
+  font-size: 20px;
+  color: #a2a2a2;
   cursor: pointer;
-  outline: none;
-  letter-spacing: 1px;
+  z-index: 2;
 }
-
-/* Modal */
+.arrow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 50px;
+  color: white;
+  z-index: 2;
+  user-select: none;
+}
+.arrow::before {
+  content: "\1F817";
+}
 #mensaje {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   background: rgba(0,0,0,0.5);
-  display: flex;
-  align-items: center;
+  display: none;
   justify-content: center;
+  align-items: center;
   z-index: 999;
 }
-
-.oculto {
-  display: none !important;
-}
-
 #mensaje .contenido {
   background: white;
   padding: 20px 30px;
-  border-radius: 12px;
+  border-radius: 10px;
   text-align: center;
-  animation: fadeIn 0.4s ease-out;
-}
-
-#mensaje p {
   font-size: 24px;
-  color: #2c3e50;
-  margin-bottom: 15px;
 }
-
 #mensaje button {
+  margin-top: 15px;
   padding: 10px 25px;
   font-size: 16px;
-  background-color: #3f51b5;
-  color: white;
   border: none;
   border-radius: 8px;
+  background: #3f51b5;
+  color: white;
   cursor: pointer;
 }
-
 #mensaje button:hover {
-  background-color: #303f9f;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
+  background: #303f9f;
 }
