@@ -1,32 +1,37 @@
 let container = document.querySelector(".container");
 let btn = document.getElementById("spin");
 let mensaje = document.getElementById("mensaje");
+let acepto = document.getElementById("acepto");
 
-let vueltas = 5; // Vueltas por click
+let vueltas = 5;
 let anguloPorNumero = 360 / 8;
 let numeroTrampa = 8;
 let totalGiro = 0;
 
 btn.onclick = function () {
-  // Ocultar mensaje si ya había salido antes
+  // Bloquear botón mientras gira
+  btn.disabled = true;
+
+  // Ocultar mensaje si estaba abierto
   mensaje.style.display = "none";
 
-  // Reiniciar transición si gira muy rápido
+  // Reiniciar transición para reiniciar animación
   container.style.transition = "none";
 
-  // Esperar un frame antes de activar transición
   requestAnimationFrame(() => {
     container.style.transition = "transform 4s ease-out";
 
-    // Calcular ángulo final
-    totalGiro += (vueltas * 360) + (anguloPorNumero * (numeroTrampa - 1));
-
-    // Girar la ruleta
+    totalGiro += vueltas * 360 + anguloPorNumero * (numeroTrampa - 1);
     container.style.transform = `rotate(${totalGiro}deg)`;
   });
 
-  // Mostrar mensaje cuando termina el giro (después de 4s)
+  // Mostrar mensaje después del giro
   setTimeout(() => {
     mensaje.style.display = "block";
   }, 4000);
-}
+};
+
+acepto.onclick = function () {
+  mensaje.style.display = "none";
+  btn.disabled = false;
+};
