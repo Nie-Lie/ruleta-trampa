@@ -16,4 +16,103 @@ body {
   align-items: center;
 }
 .ruleta-wrapper {
-  position: r
+  position: relative;
+  width: 500px;
+  height: 500px;
+}
+.container {
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  border: 15px solid #dde;
+  background: #ccc;
+  position: relative;
+  overflow: hidden;
+  transition: transform 4s ease-out;
+}
+.container div {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  top: 50%;
+  left: 50%;
+  transform-origin: 0% 0%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+  text-align: center;
+  padding: 5px;
+}
+
+.one   { background: #3f51b5; transform: rotate(0deg)    translate(-50%, -100%); }
+.two   { background: #ff9800; transform: rotate(45deg)   translate(-50%, -100%); }
+.three { background: #e91e63; transform: rotate(90deg)   translate(-50%, -100%); }
+.four  { background: #4caf50; transform: rotate(135deg)  translate(-50%, -100%); }
+.five  { background: #009688; transform: rotate(180deg)  translate(-50%, -100%); }
+.six   { background: #795548; transform: rotate(225deg)  translate(-50%, -100%); }
+.seven { background: #9c27b0; transform: rotate(270deg)  translate(-50%, -100%); }
+.eight { background: #f44336; transform: rotate(315deg)  translate(-50%, -100%); }
+
+#spin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #e2e2e2;
+  border: 8px solid white;
+  font-weight: bold;
+  font-size: 20px;
+  color: #a2a2a2;
+  cursor: pointer;
+  z-index: 2;
+}
+.arrow {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 50px;
+  color: white;
+  z-index: 2;
+  user-select: none;
+}
+.arrow::before {
+  content: "\1F817";
+}
+#mensaje {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+#mensaje .contenido {
+  background: white;
+  padding: 20px 30px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 24px;
+}
+#mensaje button {
+  margin-top: 15px;
+  padding: 10px 25px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  background: #3f51b5;
+  color: white;
+  cursor: pointer;
+}
+#mensaje button:hover {
+  background: #303f9f;
+}
