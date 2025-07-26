@@ -10,9 +10,9 @@ let totalGiro = 0;
 
 btn.onclick = function () {
   btn.disabled = true;
-  mensaje.style.display = "none";
-  container.style.transition = "none";
+  mensaje.classList.add("oculto");
 
+  container.style.transition = "none";
   requestAnimationFrame(() => {
     container.style.transition = "transform 4s ease-out";
     totalGiro += vueltas * 360 + anguloPorNumero * (numeroTrampa - 1);
@@ -20,11 +20,11 @@ btn.onclick = function () {
   });
 
   setTimeout(() => {
-    mensaje.style.display = "flex";
+    mensaje.classList.remove("oculto");
   }, 4000);
 };
 
 acepto.onclick = function () {
-  mensaje.style.display = "none";
+  mensaje.classList.add("oculto");
   btn.disabled = false;
 };
