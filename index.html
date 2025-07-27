@@ -1,29 +1,95 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <title>Ruleta</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="estilos.css" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Ruleta</title>
+<style>
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #eaeaea;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  #wheel {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.15);
+  }
+  .sec {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 0%;
+    clip-path: polygon(100% 0, 0 0, 0 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+  }
+  .sec:nth-child(1) {
+    background: #16a085;
+    transform: rotate(0deg);
+  }
+  .sec:nth-child(2) {
+    background: #2980b9;
+    transform: rotate(60deg);
+  }
+  .sec:nth-child(3) {
+    background: #34495e;
+    transform: rotate(120deg);
+  }
+  .sec:nth-child(4) {
+    background: #f39c12;
+    transform: rotate(180deg);
+  }
+  .sec:nth-child(5) {
+    background: #d35400;
+    transform: rotate(240deg);
+  }
+  .sec:nth-child(6) {
+    background: #c0392b;
+    transform: rotate(300deg);
+  }
+  #spin {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    margin: -40px 0 0 -40px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.3);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    color: #777;
+    font-size: 22px;
+    user-select: none;
+    z-index: 10;
+  }
+  #txt {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 20px;
+    color: #333;
+    text-align: center;
+  }
+</style>
 </head>
 <body>
-  <div id="wrapper">
-    <div id="wheel">
-      <div id="inner-wheel">
-        <div class="sec">Premio 1</div>
-        <div class="sec">Premio 2</div>
-        <div class="sec">Premio 3</div>
-        <div class="sec">Premio 4</div>
-        <div class="sec">Premio 5</div>
-        <div class="sec">Premio 6</div>
-      </div>
-      <div id="spin"><div id="inner-spin"></div></div>
-      <div id="shine"></div>
-    </div>
-    <div id="txt"></div>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+  <d
