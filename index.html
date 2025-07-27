@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruleta estilo Pizza con SVG</title>
+<title>Ruleta estilo Pizza Mejorada</title>
 <style>
   body {
     background: #eee;
@@ -25,6 +25,9 @@
     margin: auto;
     cursor: pointer;
     transition: transform 6s cubic-bezier(0, 0.99, 0.44, 0.99);
+    border-radius: 50%; /* Para que el contenedor se vea circular */
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
   }
   text {
     font-size: 14px;
@@ -54,14 +57,14 @@
   /* Flecha indicadora */
   #pointer {
     position: absolute;
-    top: -10px;
+    top: -15px;
     left: 50%;
     transform: translateX(-50%);
     width: 0; 
     height: 0; 
-    border-left: 15px solid transparent;
-    border-right: 15px solid transparent;
-    border-bottom: 25px solid #e74c3c;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 30px solid #e74c3c;
     z-index: 10;
   }
 </style>
@@ -71,6 +74,7 @@
 <div id="container">
   <div id="pointer"></div>
   <svg id="wheel" width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" >
+    <circle cx="160" cy="160" r="150" fill="#fff" />
     <g id="sectors"></g>
   </svg>
 </div>
@@ -114,18 +118,4 @@
   }
 
   // Convierte ángulo polar a coordenadas cartesianas
-  function polarToCartesian(cx, cy, r, angleInDegrees) {
-    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
-    return {
-      x: cx + (r * Math.cos(angleInRadians)),
-      y: cy + (r * Math.sin(angleInRadians))
-    };
-  }
-
-  // Dibuja sectores
-  sectorsData.forEach((sector, i) => {
-    const startAngle = i * sectorAngle;
-    const endAngle = startAngle + sectorAngle;
-    const pathData = describeSector(centerX, centerY, radius, startAngle, endAngle);
-
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  function polarToCart
