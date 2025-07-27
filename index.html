@@ -1,113 +1,262 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruleta Simple</title>
-<style>
-  body {
-    margin:0; padding:0;
-    font-family: Arial, sans-serif;
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: #eee;
-  }
-  #container {
-    position: relative;
-    width: 300px;
-    height: 300px;
-  }
-  svg {
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    user-select: none;
-    transition: transform 5s cubic-bezier(0,0.99,0.44,0.99);
-  }
-  #pointer {
-    position: absolute;
-    top: -25px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0; height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-bottom: 30px solid red;
-    z-index: 10;
-  }
-  text {
-    font-weight: bold;
-    fill: white;
-    font-size: 14px;
-    pointer-events: none;
-  }
-  button {
-    margin-top: 20px;
-    padding: 10px 30px;
-    font-size: 18px;
-    border:none;
-    background:#333;
-    color:#fff;
-    border-radius: 8px;
-    cursor: pointer;
-  }
-  #result {
-    margin-top: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    min-height: 30px;
-    color: #333;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Ruleta Cita con Pachuca</title>
+  <style>
+    /* (mismo CSS que antes, no lo repito para no saturar) */
+    body {
+      margin: 0; padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      height: 100vh;
+      background: #eee;
+    }
+
+    #container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+    }
+
+    svg {
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      user-select: none;
+      transition: transform 5s cubic-bezier(0,0.99,0.44,0.99);
+      transform-origin: 150px 150px;
+    }
+
+    #pointer {
+      position: absolute;
+      top: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      border-top: 30px solid #16a085;
+      z-index: 10;
+    }
+
+    text {
+      font-weight: bold;
+      fill: white;
+      font-size: 11px;
+      pointer-events: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 30px;
+      font-size: 18px;
+      border: none;
+      background: #333;
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      min-height: 30px;
+      color: #333;
+      text-align: center;
+    }
+
+    /* Modal */
+    #modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0,0,0,0.6);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #modal-content {
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    }
+
+    #modal-content p {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    #accept-btn {
+      padding: 10px 30px;
+      font-size: 16px;
+      background-color: #16a085;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
 
 <div id="container">
   <div id="pointer"></div>
-  <svg id="wheel" width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <svg id="wheel" width="300" height="300" viewBox="0 0 300 300">
     <circle cx="150" cy="150" r="145" fill="#fff" stroke="#ccc" stroke-width="2"/>
     <g id="sectors"></g>
   </svg>
 </div>
 
 <button id="spin-btn">Girar</button>
-<div id="result"></div>
+<div id="result">Listo para girar</div>
+
+<!-- Audio ruleta -->
+<audio id="ruleta-sound" src="https://www.soundjay.com/misc/sounds/slot-machine-1.mp3" preload="auto"></audio>
+
+<!-- Modal -->
+<div id="modal">
+  <div id="modal-content">
+    <p>🎉 Ganaste: Cita con Pachuca 🎉</p>
+    <button id="accept-btn">Acepto</button>
+  </div>
+</div>
 
 <script>
   const sectorsData = [
-    {color: '#16a085', label: 'Premio 1'},
-    {color: '#2980b9', label: 'Premio 2'},
-    {color: '#34495e', label: 'Premio 3'},
-    {color: '#f39c12', label: 'Premio 4'},
-    {color: '#d35400', label: 'Premio 5'},
-    {color: '#c0392b', label: 'Premio 6'},
+    { color: '#16a085', label: 'Cita con Pachuca' },
+    { color: '#2980b9', label: 'Premio 2' },
+    { color: '#34495e', label: 'Premio 3' },
+    { color: '#f39c12', label: 'Premio 4' },
+    { color: '#d35400', label: 'Premio 5' },
+    { color: '#c0392b', label: 'Premio 6' }
   ];
 
   const svg = document.getElementById('wheel');
   const sectorsGroup = document.getElementById('sectors');
   const spinBtn = document.getElementById('spin-btn');
   const result = document.getElementById('result');
+  const modal = document.getElementById('modal');
+  const acceptBtn = document.getElementById('accept-btn');
+  const ruletaSound = document.getElementById('ruleta-sound');
 
-  const cx = 150;
-  const cy = 150;
-  const r = 145;
+  const cx = 150, cy = 150, r = 145;
   const n = sectorsData.length;
   const angle = 360 / n;
 
   function polarToCartesian(cx, cy, r, angleDeg) {
-    const angleRad = (angleDeg - 90) * Math.PI / 180.0;
+    const rad = (angleDeg - 90) * Math.PI / 180;
     return {
-      x: cx + (r * Math.cos(angleRad)),
-      y: cy + (r * Math.sin(angleRad))
+      x: cx + r * Math.cos(rad),
+      y: cy + r * Math.sin(rad)
     };
   }
 
   function describeSector(cx, cy, r, startAngle, endAngle) {
     const start = polarToCartesian(cx, cy, r, endAngle);
     const end = polarToCartesian(cx, cy, r, startAngle);
-    const largeArcFlag = (endAngle - startAngle) <= 180 ? "0" : "1";
+    const largeArcFlag = (endAngle - startAngle) <= 180 ? 0 : 1;
+    return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
+  }
 
-    return [
-      "M", c
+  for (let i = 0; i < n; i++) {
+    const startAngle = i * angle;
+    const endAngle = startAngle + angle;
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", describeSector(cx, cy, r, startAngle, endAngle));
+    path.setAttribute("fill", sectorsData[i].color);
+    path.setAttribute("stroke", "#fff");
+    path.setAttribute("stroke-width", "2");
+    sectorsGroup.appendChild(path);
+
+    const midAngle = startAngle + angle / 2;
+    const textPos = polarToCartesian(cx, cy, r * 0.65, midAngle);
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", textPos.x);
+    text.setAttribute("y", textPos.y);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("dominant-baseline", "middle");
+    text.setAttribute("transform", `rotate(${midAngle + 90}, ${textPos.x}, ${textPos.y})`);
+    text.textContent = sectorsData[i].label;
+    sectorsGroup.appendChild(text);
+  }
+
+  let spinning = false;
+
+  function spinToDegree(deg, duration, callback, instantReset = false, timingFunction = 'cubic-bezier(0,0.99,0.44,0.99)') {
+    if (instantReset) {
+      svg.style.transition = 'none';
+      svg.style.transform = 'rotate(0deg)';
+      svg.offsetHeight; // Trigger reflow
+    }
+
+    svg.style.transition = `transform ${duration}s ${timingFunction}`;
+    svg.style.transform = `rotate(${deg}deg)`;
+
+    setTimeout(callback, duration * 1000);
+  }
+
+  spinBtn.addEventListener('click', async () => {
+    if (spinning) return;
+    spinning = true;
+    result.textContent = 'Girando...';
+
+    try {
+      await ruletaSound.play(); // Play triggered by user interaction
+    } catch(e) {
+      console.log('Audio play prevented:', e);
+    }
+    ruletaSound.currentTime = 0;
+    ruletaSound.loop = true;
+
+    const vueltas = 5;
+    const randomDegrees = Math.floor(Math.random() * 360);
+    const firstRotation = vueltas * 360 + randomDegrees;
+
+    // Primer giro
+    spinToDegree(0, 0, () => {
+      spinToDegree(firstRotation, 2, () => {
+        setTimeout(() => {
+          result.textContent = 'Girando al premio correcto...';
+
+          const citaIndex = 0;
+          const sectorCenter = citaIndex * angle + angle / 2;
+
+          const normalizedFirst = firstRotation % 360;
+          let diff = (360 - sectorCenter) - normalizedFirst;
+          if (diff < 0) diff += 360;
+
+          const secondRotation = firstRotation + diff;
+
+          // Segundo giro suave (más rápido)
+          spinToDegree(secondRotation, 4, () => {
+            ruletaSound.pause();
+            ruletaSound.currentTime = 0;
+
+            result.textContent = `🎉 Ganaste: ${sectorsData[citaIndex].label} 🎉`;
+            spinning = false;
+
+            // Mostrar modal si es cita
+            if (sectorsData[citaIndex].label === 'Cita con Pachuca') {
+              modal.style.display = 'flex';
+            }
+          }, false, 'ease-in-out');
+
+        }, 1000); // espera 1s antes del segundo giro
+      });
+    }, true);
+  });
+
+  acceptBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+</script>
+
+</body>
+</html>
