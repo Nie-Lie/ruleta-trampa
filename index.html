@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruleta mejorada</title>
+<title>Ruleta 6 Sectores Igual</title>
 <style>
   body {
     margin:0; padding:0;
@@ -26,19 +26,96 @@
   }
   .sector {
     position: absolute;
-    width: 50%;
-    height: 50%;
-    top: 50%;
-    left: 50%;
-    transform-origin: 0% 100%;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-    border: 2px solid #fff;
-    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(
+      50% 50%, 
+      100% 0%, 
+      100% 100%
+    );
+    transform-origin: 50% 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 50%;
     color: white;
     font-weight: bold;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 15px;
+    font-size: 18px;
     user-select: none;
-    font-s
+    border-right: 2px solid white;
+    box-sizing: border-box;
+  }
+  /* Colores y rotaciones para 6 sectores */
+  .sector:nth-child(1) { background: #16a085; transform: rotate(0deg); }
+  .sector:nth-child(2) { background: #2980b9; transform: rotate(60deg); }
+  .sector:nth-child(3) { background: #34495e; transform: rotate(120deg); }
+  .sector:nth-child(4) { background: #f39c12; transform: rotate(180deg); }
+  .sector:nth-child(5) { background: #d35400; transform: rotate(240deg); }
+  .sector:nth-child(6) { background: #c0392b; transform: rotate(300deg); }
+
+  #spin-btn {
+    margin-top: 30px;
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background: #333;
+    color: white;
+    border-radius: 8px;
+    user-select: none;
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #333;
+    min-height: 28px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div id="wheel">
+  <div class="sector">Premio 1</div>
+  <div class="sector">Premio 2</div>
+  <div class="sector">Premio 3</div>
+  <div class="sector">Premio 4</div>
+  <div class="sector">Premio 5</div>
+  <div class="sector">Premio 6</div>
+</div>
+
+<button id="spin-btn">Girar Ruleta</button>
+<div id="result"></div>
+
+<script>
+  const wheel = document.getElementById('wheel');
+  const spinBtn = document.getElementById('spin-btn');
+  const result = document.getElementById('result');
+  const sectors = 6;
+  const sectorAngle = 360 / sectors;
+  const prizes = [
+    "Premio 1",
+    "Premio 2",
+    "Premio 3",
+    "Premio 4",
+    "Premio 5",
+    "Premio 6"
+  ];
+
+  let currentDegree = 0;
+  let spinning = false;
+
+  spinBtn.addEventListener('click', () => {
+    if (spinning) return;
+    spinning = true;
+    result.textContent = '';
+
+    const extraDegree = Math.floor(Math.random() * 360);
+    currentDegree += 360 * 5 + extraDegree;
+
+    wheel.style.transform = `rotate(${currentDegree}deg)`;
+
+    setTimeout(() => {
+      const normalizedDegree = currentDegree % 360;
+      let index = Math.floor(((360 - normalizedDegree + sectorAngle / 2) %
