@@ -3,49 +3,129 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruleta estilo pizza 6 sectores</title>
+<title>Ruleta estilo Pizza con SVG</title>
 <style>
   body {
-    margin: 0; padding: 0;
     background: #eee;
+    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     height: 100vh;
-    font-family: Arial, sans-serif;
+    margin: 0;
   }
-
-  #wheel {
+  #container {
     position: relative;
     width: 320px;
     height: 320px;
-    border-radius: 50%;
-    overflow: hidden;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  }
+  svg {
+    display: block;
+    margin: auto;
+    cursor: pointer;
     transition: transform 6s cubic-bezier(0, 0.99, 0.44, 0.99);
   }
-
-  .sector {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0; left: 0;
-    clip-path: polygon(50% 50%, 100% 0, 100% 100%);
-    /* Triángulo desde centro hacia derecha */
-    transform-origin: 50% 50%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    padding-left: 45%;
-    box-sizing: border-box;
-    color: white;
+  text {
+    font-size: 14px;
+    fill: white;
     font-weight: bold;
-    font-size: 16px;
-    border-right: 2px solid white; /* Separación visual */
+    pointer-events: none;
+  }
+  #spin-btn {
+    margin-top: 20px;
+    padding: 12px 30px;
+    font-size: 18px;
+    border-radius: 8px;
+    border: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
     user-select: none;
   }
+  #result {
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    min-height: 30px;
+    text-align: center;
+  }
+  /* Flecha indicadora */
+  #pointer {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0; 
+    height: 0; 
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+    border-bottom: 25px solid #e74c3c;
+    z-index: 10;
+  }
+</style>
+</head>
+<body>
 
-  /* 6 sectores girados cada 60 grados */
-  .sector:nth-child(1) { background-color: #16a085; transform: rotate(0deg); }
-  .sector:nth-child(2) { background-color: #2980b9
+<div id="container">
+  <div id="pointer"></div>
+  <svg id="wheel" width="320" height="320" viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" >
+    <g id="sectors"></g>
+  </svg>
+</div>
+
+<button id="spin-btn">Girar Ruleta</button>
+<div id="result"></div>
+
+<script>
+  const sectorsData = [
+    { color: '#16a085', label: 'Premio 1' },
+    { color: '#2980b9', label: 'Premio 2' },
+    { color: '#34495e', label: 'Premio 3' },
+    { color: '#f39c12', label: 'Premio 4' },
+    { color: '#d35400', label: 'Premio 5' },
+    { color: '#c0392b', label: 'Premio 6' },
+  ];
+
+  const svg = document.getElementById('wheel');
+  const sectorsGroup = document.getElementById('sectors');
+  const spinBtn = document.getElementById('spin-btn');
+  const result = document.getElementById('result');
+
+  const centerX = 160;
+  const centerY = 160;
+  const radius = 150;
+  const totalSectors = sectorsData.length;
+  const sectorAngle = 360 / totalSectors;
+
+  // Función para crear path de sector circular
+  function describeSector(cx, cy, r, startAngle, endAngle) {
+    const start = polarToCartesian(cx, cy, r, endAngle);
+    const end = polarToCartesian(cx, cy, r, startAngle);
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+
+    return [
+      "M", cx, cy,
+      "L", start.x, start.y,
+      "A", r, r, 0, largeArcFlag, 0, end.x, end.y,
+      "Z"
+    ].join(" ");
+  }
+
+  // Convierte ángulo polar a coordenadas cartesianas
+  function polarToCartesian(cx, cy, r, angleInDegrees) {
+    const angleInRadians = (angleInDegrees - 90) * Math.PI / 180.0;
+    return {
+      x: cx + (r * Math.cos(angleInRadians)),
+      y: cy + (r * Math.sin(angleInRadians))
+    };
+  }
+
+  // Dibuja sectores
+  sectorsData.forEach((sector, i) => {
+    const startAngle = i * sectorAngle;
+    const endAngle = startAngle + sectorAngle;
+    const pathData = describeSector(centerX, centerY, radius, startAngle, endAngle);
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
