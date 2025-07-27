@@ -3,47 +3,49 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruleta sectores desde centro</title>
+<title>Ruleta estilo pizza 6 sectores</title>
 <style>
   body {
-    margin:0; padding:0;
+    margin: 0; padding: 0;
+    background: #eee;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
+    align-items: center;
     height: 100vh;
     font-family: Arial, sans-serif;
-    background: #eee;
   }
+
   #wheel {
     position: relative;
     width: 320px;
     height: 320px;
     border-radius: 50%;
-    overflow: visible;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
     transition: transform 6s cubic-bezier(0, 0.99, 0.44, 0.99);
   }
+
   .sector {
     position: absolute;
-    width: 160px;   /* mitad del diámetro */
-    height: 320px;  /* igual al diámetro */
-    top: 0;
-    left: 160px;    /* comienza desde el centro horizontal */
-    transform-origin: left center;
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    width: 100%;
+    height: 100%;
+    top: 0; left: 0;
+    clip-path: polygon(50% 50%, 100% 0, 100% 100%);
+    /* Triángulo desde centro hacia derecha */
+    transform-origin: 50% 50%;
     display: flex;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: center;
+    padding-left: 45%;
+    box-sizing: border-box;
     color: white;
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
+    border-right: 2px solid white; /* Separación visual */
     user-select: none;
-    border-right: 2px solid #fff;
-    box-sizing: border-box;
-    padding-left: 10px;
   }
 
-  /* colores y rotaciones para 6 sectores */
-  .sector:nth-child(1) { background: #16a085; transform: rotate(0deg); }
-  .sector:nth-child(2) { background: #298
+  /* 6 sectores girados cada 60 grados */
+  .sector:nth-child(1) { background-color: #16a085; transform: rotate(0deg); }
+  .sector:nth-child(2) { background-color: #2980b9
