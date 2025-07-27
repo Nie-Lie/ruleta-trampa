@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ruleta funcional</title>
+<title>Ruleta sectores no sobrepuestos</title>
 <style>
   body {
     margin:0; padding:0;
@@ -26,19 +26,24 @@
   }
   .sector {
     position: absolute;
-    width: 150px;
-    height: 300px;
-    top: 0; left: 150px;
-    transform-origin: left center;
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    width: 50%;
+    height: 50%;
+    top: 50%;
+    left: 50%;
+    transform-origin: 0% 100%;
+    background: #16a085;
+    clip-path: polygon(0% 0%, 100% 0%, 50% 100%);
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
+    padding-bottom: 10px;
     color: white;
     font-weight: bold;
     font-size: 16px;
     user-select: none;
+    box-sizing: border-box;
   }
+  /* Colores y rotaciones para 6 sectores */
   .sector:nth-child(1) { background: #16a085; transform: rotate(0deg); }
   .sector:nth-child(2) { background: #2980b9; transform: rotate(60deg); }
   .sector:nth-child(3) { background: #34495e; transform: rotate(120deg); }
@@ -97,3 +102,26 @@
   ];
 
   let currentDegree = 0;
+  let spinning = false;
+
+  spinBtn.addEventListener('click', () => {
+    if (spinning) return;
+    spinning = true;
+    result.textContent = '';
+
+    const extraDegree = Math.floor(Math.random() * 360);
+    currentDegree += 360 * 5 + extraDegree;
+
+    wheel.style.transform = `rotate(${currentDegree}deg)`;
+
+    setTimeout(() => {
+      const normalizedDegree = currentDegree % 360;
+      let index = Math.floor(((360 - normalizedDegree + sectorAngle / 2) % 360) / sectorAngle);
+      result.textContent = `Ganaste: ${prizes[index]}`;
+      spinning = false;
+    }, 6000);
+  });
+</script>
+
+</body>
+</html>
