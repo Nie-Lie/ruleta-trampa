@@ -1,40 +1,33 @@
 var degree = 1800;
 var clicks = 0;
 
-$(document).ready(function() {
-  $('#spin').click(function() {
-    
-    clicks ++;
-    var newDegree = degree * clicks;
-    var extraDegree = Math.floor(Math.random() * (360 - 1 + 1)) + 1;
-    totalDegree = newDegree + extraDegree;
-    
-    $('#wheel .sec').each(function() {
-      var t = $(this);
-      var noY = 0;
-      
-      var c = 0;
-      var n = 700;
-      var interval =  setInterval(function () {
-        c++;
-        if (c === n) {
-          clearInterval(interval);
-        }
-        
-        var aoY = t.offset().top;
-        $('#txt').html(aoY);
-        
-        if(aoY < 23.89) {
-          $('#spin').addClass('spin');
-          setTimeout(function () {
-            $("#spin").removeClass('spin');
-          }, 100);
-        }
-      }, 10);
-      
-      $('#inner-wheel').css({'transform' : 'rotate(' + totalDegree + 'deg)'});
-      
-      noY = t.offset().top;
-    });
+const opciones = [
+  "🔔 Campana",
+  "💬 Comentario",
+  "😄 Sonrisa",
+  "❤️ Corazón",
+  "⭐ Estrella",
+  "💡 Idea"
+];
+
+$(document).ready(function () {
+  $('#spin').click(function () {
+    clicks++;
+    let newDegree = degree * clicks;
+    let extraDegree = Math.floor(Math.random() * 360);
+    let totalDegree = newDegree + extraDegree;
+
+    // Gira la ruleta
+    $('#inner-wheel').css({ 'transform': 'rotate(' + totalDegree + 'deg)' });
+
+    // Detectar resultado
+    let gradosFinales = totalDegree % 360;
+    let seccion = Math.floor(gradosFinales / 60);
+    let resultado = opciones[seccion];
+
+    // Mostrar resultado después de que termine de girar
+    setTimeout(() => {
+      $('#txt').html("Resultado: " + resultado);
+    }, 6200); // el mismo tiempo que la animación (6s + un poco de margen)
   });
 });
