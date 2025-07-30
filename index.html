@@ -2,38 +2,45 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ruleta Cita con Pachuca</title>
   <style>
-    /* (mismo CSS que antes, no lo repito para no saturar) */
     body {
-      margin: 0; padding: 0;
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       background: #eee;
     }
 
     #container {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: 90vw;
+      max-width: 500px;
     }
 
     svg {
+      width: 100%;
+      height: auto;
+      display: block;
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 5s cubic-bezier(0, 0.99, 0.44, 0.99);
+      transform-origin: 50% 50%;
       user-select: none;
-      transition: transform 5s cubic-bezier(0,0.99,0.44,0.99);
-      transform-origin: 150px 150px;
     }
 
     #pointer {
       position: absolute;
-      top: -25px;
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
-      width: 0; height: 0;
+      width: 0;
+      height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
       border-top: 30px solid #16a085;
@@ -43,26 +50,27 @@
     text {
       font-weight: bold;
       fill: white;
-      font-size: 11px;
+      font-size: 12px;
       pointer-events: none;
     }
 
     button {
       margin-top: 20px;
-      padding: 10px 30px;
-      font-size: 18px;
+      padding: 15px 40px;
+      font-size: 20px;
       border: none;
       background: #333;
       color: #fff;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
+      user-select: none;
+      touch-action: manipulation;
     }
 
     #result {
-      margin-top: 20px;
-      font-size: 20px;
+      margin-top: 15px;
+      font-size: 18px;
       font-weight: bold;
-      min-height: 30px;
       color: #333;
       text-align: center;
     }
@@ -71,32 +79,35 @@
     #modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.6);
       display: none;
       justify-content: center;
       align-items: center;
+      padding: 20px;
       z-index: 9999;
     }
 
     #modal-content {
-      background-color: #fff;
-      padding: 30px;
+      background: #fff;
+      padding: 25px;
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 100%;
+      max-width: 350px;
     }
 
     #modal-content p {
-      font-size: 20px;
-      color: #333;
+      font-size: 18px;
       margin-bottom: 20px;
+      color: #333;
     }
 
     #accept-btn {
-      padding: 10px 30px;
-      font-size: 16px;
-      background-color: #16a085;
-      color: white;
+      padding: 12px 25px;
+      font-size: 18px;
+      background: #16a085;
+      color: #fff;
       border: none;
       border-radius: 8px;
       cursor: pointer;
@@ -107,7 +118,7 @@
 
 <div id="container">
   <div id="pointer"></div>
-  <svg id="wheel" width="300" height="300" viewBox="0 0 300 300">
+  <svg id="wheel" viewBox="0 0 300 300">
     <circle cx="150" cy="150" r="145" fill="#fff" stroke="#ccc" stroke-width="2"/>
     <g id="sectors"></g>
   </svg>
@@ -116,7 +127,7 @@
 <button id="spin-btn">Girar</button>
 <div id="result">Listo para girar</div>
 
-<!-- Audio ruleta -->
+<!-- Sonido -->
 <audio id="ruleta-sound" src="https://www.soundjay.com/misc/sounds/slot-machine-1.mp3" preload="auto"></audio>
 
 <!-- Modal -->
@@ -176,7 +187,7 @@
     sectorsGroup.appendChild(path);
 
     const midAngle = startAngle + angle / 2;
-    const textPos = polarToCartesian(cx, cy, r * 0.65, midAngle);
+    const textPos = polarToCartesian(cx, cy, r * 0.6, midAngle);
     const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.setAttribute("x", textPos.x);
     text.setAttribute("y", textPos.y);
@@ -189,14 +200,14 @@
 
   let spinning = false;
 
-  function spinToDegree(deg, duration, callback, instantReset = false, timingFunction = 'cubic-bezier(0,0.99,0.44,0.99)') {
+  function spinToDegree(deg, duration, callback, instantReset = false, easing = 'cubic-bezier(0,0.99,0.44,0.99)') {
     if (instantReset) {
       svg.style.transition = 'none';
       svg.style.transform = 'rotate(0deg)';
-      svg.offsetHeight; // Trigger reflow
+      svg.offsetHeight; // trigger reflow
     }
 
-    svg.style.transition = `transform ${duration}s ${timingFunction}`;
+    svg.style.transition = `transform ${duration}s ${easing}`;
     svg.style.transform = `rotate(${deg}deg)`;
 
     setTimeout(callback, duration * 1000);
@@ -208,9 +219,9 @@
     result.textContent = 'Girando...';
 
     try {
-      await ruletaSound.play(); // Play triggered by user interaction
-    } catch(e) {
-      console.log('Audio play prevented:', e);
+      await ruletaSound.play();
+    } catch (e) {
+      console.log('Audio play blocked:', e);
     }
     ruletaSound.currentTime = 0;
     ruletaSound.loop = true;
@@ -219,7 +230,6 @@
     const randomDegrees = Math.floor(Math.random() * 360);
     const firstRotation = vueltas * 360 + randomDegrees;
 
-    // Primer giro
     spinToDegree(0, 0, () => {
       spinToDegree(firstRotation, 2, () => {
         setTimeout(() => {
@@ -227,28 +237,24 @@
 
           const citaIndex = 0;
           const sectorCenter = citaIndex * angle + angle / 2;
-
           const normalizedFirst = firstRotation % 360;
           let diff = (360 - sectorCenter) - normalizedFirst;
           if (diff < 0) diff += 360;
 
           const secondRotation = firstRotation + diff;
 
-          // Segundo giro suave (más rápido)
-          spinToDegree(secondRotation, 4, () => {
+          spinToDegree(secondRotation, 3, () => {
             ruletaSound.pause();
             ruletaSound.currentTime = 0;
-
             result.textContent = `🎉 Ganaste: ${sectorsData[citaIndex].label} 🎉`;
             spinning = false;
 
-            // Mostrar modal si es cita
             if (sectorsData[citaIndex].label === 'Cita con Pachuca') {
               modal.style.display = 'flex';
             }
           }, false, 'ease-in-out');
 
-        }, 1000); // espera 1s antes del segundo giro
+        }, 1000);
       });
     }, true);
   });
