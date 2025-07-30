@@ -91,21 +91,21 @@
       background: #fff;
       padding: 25px;
       border-radius: 12px;
-      text-align: center;
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      width: 100%;
       max-width: 350px;
+      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      margin: auto;
+      text-align: center;
     }
 
     #modal-content p {
       font-size: 20px;
       margin-bottom: 20px;
       color: #333;
-      text-align: center;
       width: 100%;
     }
 
@@ -123,7 +123,6 @@
 <body>
   <div id="container">
     <div id="pointer"></div>
-    <!-- Aquí va la ruleta SVG o canvas -->
     <svg id="wheel" viewBox="0 0 500 500"></svg>
     <button id="spin-btn">Girar</button>
     <div id="result"></div>
@@ -132,4 +131,17 @@
   <div id="modal">
     <div id="modal-content">
       <p>🎉 Ganaste: Cita con Pachuca 🎉</p>
-      <button id="accept-btn">Acepto</button
+      <button id="accept-btn">Acepto</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('modal');
+    const btnAceptar = document.getElementById('accept-btn');
+
+    btnAceptar.onclick = () => {
+      modal.style.display = 'none';
+    };
+  </script>
+</body>
+</html>
