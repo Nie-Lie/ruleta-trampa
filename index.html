@@ -9,34 +9,36 @@
       margin: 0;
       padding: 0;
       font-family: Arial, sans-serif;
+      background: #eee;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      background: #eee;
     }
 
     #container {
       position: relative;
       width: 90vw;
       max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     svg {
       width: 100%;
+      max-width: 500px;
       height: auto;
-      display: block;
       border-radius: 50%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      transition: transform 5s cubic-bezier(0, 0.99, 0.44, 0.99);
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
       transform-origin: 50% 50%;
-      user-select: none;
+      transition: transform 5s cubic-bezier(0.25, 1, 0.3, 1);
     }
 
     #pointer {
       position: absolute;
-      top: -30px;
+      top: -25px;
       left: 50%;
       transform: translateX(-50%);
       width: 0;
@@ -47,32 +49,15 @@
       z-index: 10;
     }
 
-    text {
-      font-weight: bold;
-      fill: white;
-      font-size: 12px;
-      pointer-events: none;
-    }
-
     button {
-      margin-top: 20px;
+      margin-top: 30px;
       padding: 15px 40px;
-      font-size: 20px;
-      border: none;
-      background: #333;
+      font-size: 18px;
+      background: #16a085;
       color: #fff;
+      border: none;
       border-radius: 10px;
       cursor: pointer;
-      user-select: none;
-      touch-action: manipulation;
-    }
-
-    #result {
-      margin-top: 15px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-      text-align: center;
     }
 
     /* Modal */
@@ -83,35 +68,28 @@
       display: none;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      z-index: 9999;
+      z-index: 1000;
     }
 
     #modal-content {
       background: #fff;
-      padding: 25px;
+      padding: 30px 20px;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.3);
-      max-width: 350px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin: auto;
       text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      max-width: 300px;
+      width: 100%;
     }
 
     #modal-content p {
       font-size: 20px;
       margin-bottom: 20px;
       color: #333;
-      width: 100%;
     }
 
     #accept-btn {
-      padding: 12px 25px;
-      font-size: 18px;
+      padding: 10px 25px;
+      font-size: 16px;
       background: #16a085;
       color: #fff;
       border: none;
@@ -123,9 +101,28 @@
 <body>
   <div id="container">
     <div id="pointer"></div>
-    <svg id="wheel" viewBox="0 0 500 500"></svg>
+
+    <svg id="wheel" viewBox="0 0 500 500">
+      <!-- 6 Secciones -->
+      <g id="slices">
+        <path d="M250,250 L250,0 A250,250 0 0,1 466,125 Z" fill="#16a085"></path>
+        <path d="M250,250 L466,125 A250,250 0 0,1 404,404 Z" fill="#2980b9"></path>
+        <path d="M250,250 L404,404 A250,250 0 0,1 125,466 Z" fill="#8e44ad"></path>
+        <path d="M250,250 L125,466 A250,250 0 0,1 46,250 Z" fill="#f39c12"></path>
+        <path d="M250,250 L46,250 A250,250 0 0,1 125,46 Z" fill="#c0392b"></path>
+        <path d="M250,250 L125,46 A250,250 0 0,1 250,0 Z" fill="#34495e"></path>
+      </g>
+      <g id="labels" font-family="Arial" font-size="16" fill="white" text-anchor="middle">
+        <text x="375" y="95" transform="rotate(30, 375, 95)">Cita con Pachuca</text>
+        <text x="430" y="250" transform="rotate(90, 430, 250)">Premio 2</text>
+        <text x="340" y="390" transform="rotate(150, 340, 390)">Premio 3</text>
+        <text x="160" y="410" transform="rotate(210, 160, 410)">Premio 4</text>
+        <text x="70" y="250" transform="rotate(270, 70, 250)">Premio 5</text>
+        <text x="160" y="90" transform="rotate(330, 160, 90)">Premio 6</text>
+      </g>
+    </svg>
+
     <button id="spin-btn">Girar</button>
-    <div id="result"></div>
   </div>
 
   <div id="modal">
@@ -136,11 +133,36 @@
   </div>
 
   <script>
-    const modal = document.getElementById('modal');
-    const btnAceptar = document.getElementById('accept-btn');
+    const wheel = document.getElementById("wheel");
+    const spinBtn = document.getElementById("spin-btn");
+    const modal = document.getElementById("modal");
+    const acceptBtn = document.getElementById("accept-btn");
 
-    btnAceptar.onclick = () => {
-      modal.style.display = 'none';
+    let spinning = false;
+
+    spinBtn.addEventListener("click", () => {
+      if (spinning) return;
+
+      spinning = true;
+      const firstSpin = Math.floor(Math.random() * 360 + 360 * 3);
+      wheel.style.transition = "transform 3s ease-out";
+      wheel.style.transform = `rotate(${firstSpin}deg)`;
+
+      setTimeout(() => {
+        // Ajuste a “Cita con Pachuca” (primer sector)
+        const extra = 360 * 2 + 30; // Ajuste al ángulo deseado
+        wheel.style.transition = "transform 2.5s ease-in-out";
+        wheel.style.transform = `rotate(${firstSpin + extra}deg)`;
+
+        setTimeout(() => {
+          modal.style.display = "flex";
+          spinning = false;
+        }, 2500);
+      }, 1000);
+    });
+
+    acceptBtn.onclick = () => {
+      modal.style.display = "none";
     };
   </script>
 </body>
