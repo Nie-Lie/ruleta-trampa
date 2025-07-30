@@ -216,6 +216,7 @@
   spinBtn.addEventListener('click', async () => {
     if (spinning) return;
     spinning = true;
+    spinBtn.disabled = true; // deshabilitar mientras gira
     result.textContent = 'Girando...';
 
     try {
@@ -248,6 +249,8 @@
             ruletaSound.currentTime = 0;
             result.textContent = `🎉 Ganaste: ${sectorsData[citaIndex].label} 🎉`;
             spinning = false;
+            spinBtn.disabled = false;
+            spinBtn.textContent = "Volver a girar";
 
             if (sectorsData[citaIndex].label === 'Cita con Pachuca') {
               modal.style.display = 'flex';
