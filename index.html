@@ -95,12 +95,18 @@
       box-shadow: 0 0 20px rgba(0,0,0,0.3);
       width: 100%;
       max-width: 350px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     #modal-content p {
-      font-size: 18px;
+      font-size: 20px;
       margin-bottom: 20px;
       color: #333;
+      text-align: center;
+      width: 100%;
     }
 
     #accept-btn {
@@ -115,154 +121,15 @@
   </style>
 </head>
 <body>
-
-<div id="container">
-  <div id="pointer"></div>
-  <svg id="wheel" viewBox="0 0 300 300">
-    <circle cx="150" cy="150" r="145" fill="#fff" stroke="#ccc" stroke-width="2"/>
-    <g id="sectors"></g>
-  </svg>
-</div>
-
-<button id="spin-btn">Girar</button>
-<div id="result">Listo para girar</div>
-
-<!-- Sonido -->
-<audio id="ruleta-sound" src="https://www.soundjay.com/misc/sounds/slot-machine-1.mp3" preload="auto"></audio>
-
-<!-- Modal -->
-<div id="modal">
-  <div id="modal-content">
-    <p>🎉 Ganaste: Cita con Pachuca 🎉</p>
-    <button id="accept-btn">Acepto</button>
+  <div id="container">
+    <div id="pointer"></div>
+    <!-- Aquí va la ruleta SVG o canvas -->
+    <svg id="wheel" viewBox="0 0 500 500"></svg>
+    <button id="spin-btn">Girar</button>
+    <div id="result"></div>
   </div>
-</div>
 
-<script>
-  const sectorsData = [
-    { color: '#16a085', label: 'Cita con Pachuca' },
-    { color: '#2980b9', label: 'Premio 2' },
-    { color: '#34495e', label: 'Premio 3' },
-    { color: '#f39c12', label: 'Premio 4' },
-    { color: '#d35400', label: 'Premio 5' },
-    { color: '#c0392b', label: 'Premio 6' }
-  ];
-
-  const svg = document.getElementById('wheel');
-  const sectorsGroup = document.getElementById('sectors');
-  const spinBtn = document.getElementById('spin-btn');
-  const result = document.getElementById('result');
-  const modal = document.getElementById('modal');
-  const acceptBtn = document.getElementById('accept-btn');
-  const ruletaSound = document.getElementById('ruleta-sound');
-
-  const cx = 150, cy = 150, r = 145;
-  const n = sectorsData.length;
-  const angle = 360 / n;
-
-  function polarToCartesian(cx, cy, r, angleDeg) {
-    const rad = (angleDeg - 90) * Math.PI / 180;
-    return {
-      x: cx + r * Math.cos(rad),
-      y: cy + r * Math.sin(rad)
-    };
-  }
-
-  function describeSector(cx, cy, r, startAngle, endAngle) {
-    const start = polarToCartesian(cx, cy, r, endAngle);
-    const end = polarToCartesian(cx, cy, r, startAngle);
-    const largeArcFlag = (endAngle - startAngle) <= 180 ? 0 : 1;
-    return `M ${cx} ${cy} L ${start.x} ${start.y} A ${r} ${r} 0 ${largeArcFlag} 0 ${end.x} ${end.y} Z`;
-  }
-
-  for (let i = 0; i < n; i++) {
-    const startAngle = i * angle;
-    const endAngle = startAngle + angle;
-
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", describeSector(cx, cy, r, startAngle, endAngle));
-    path.setAttribute("fill", sectorsData[i].color);
-    path.setAttribute("stroke", "#fff");
-    path.setAttribute("stroke-width", "2");
-    sectorsGroup.appendChild(path);
-
-    const midAngle = startAngle + angle / 2;
-    const textPos = polarToCartesian(cx, cy, r * 0.6, midAngle);
-    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute("x", textPos.x);
-    text.setAttribute("y", textPos.y);
-    text.setAttribute("text-anchor", "middle");
-    text.setAttribute("dominant-baseline", "middle");
-    text.setAttribute("transform", `rotate(${midAngle + 90}, ${textPos.x}, ${textPos.y})`);
-    text.textContent = sectorsData[i].label;
-    sectorsGroup.appendChild(text);
-  }
-
-  let spinning = false;
-
-  function spinToDegree(deg, duration, callback, instantReset = false, easing = 'cubic-bezier(0,0.99,0.44,0.99)') {
-    if (instantReset) {
-      svg.style.transition = 'none';
-      svg.style.transform = 'rotate(0deg)';
-      svg.offsetHeight; // trigger reflow
-    }
-
-    svg.style.transition = `transform ${duration}s ${easing}`;
-    svg.style.transform = `rotate(${deg}deg)`;
-
-    setTimeout(callback, duration * 1000);
-  }
-
-  spinBtn.addEventListener('click', async () => {
-    if (spinning) return;
-    spinning = true;
-    result.textContent = 'Girando...';
-
-    try {
-      await ruletaSound.play();
-    } catch (e) {
-      console.log('Audio play blocked:', e);
-    }
-    ruletaSound.currentTime = 0;
-    ruletaSound.loop = true;
-
-    const vueltas = 5;
-    const randomDegrees = Math.floor(Math.random() * 360);
-    const firstRotation = vueltas * 360 + randomDegrees;
-
-    spinToDegree(0, 0, () => {
-      spinToDegree(firstRotation, 2, () => {
-        setTimeout(() => {
-          result.textContent = 'Girando al premio correcto...';
-
-          const citaIndex = 0;
-          const sectorCenter = citaIndex * angle + angle / 2;
-          const normalizedFirst = firstRotation % 360;
-          let diff = (360 - sectorCenter) - normalizedFirst;
-          if (diff < 0) diff += 360;
-
-          const secondRotation = firstRotation + diff;
-
-          spinToDegree(secondRotation, 3, () => {
-            ruletaSound.pause();
-            ruletaSound.currentTime = 0;
-            result.textContent = `🎉 Ganaste: ${sectorsData[citaIndex].label} 🎉`;
-            spinning = false;
-
-            if (sectorsData[citaIndex].label === 'Cita con Pachuca') {
-              modal.style.display = 'flex';
-            }
-          }, false, 'ease-in-out');
-
-        }, 1000);
-      });
-    }, true);
-  });
-
-  acceptBtn.addEventListener('click', () => {
-    modal.style.display = 'none';
-  });
-</script>
-
-</body>
-</html>
+  <div id="modal">
+    <div id="modal-content">
+      <p>🎉 Ganaste: Cita con Pachuca 🎉</p>
+      <button id="accept-btn">Acepto</button
