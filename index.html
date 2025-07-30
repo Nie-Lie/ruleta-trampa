@@ -2,38 +2,24 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ruleta Cita con Pachuca</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
-      background: #eee;
+      background: #f5f5f5;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      height: 100vh;
     }
 
     #container {
       position: relative;
       width: 90vw;
       max-width: 500px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    svg {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      border-radius: 50%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      transform-origin: 50% 50%;
-      transition: transform 5s cubic-bezier(0.25, 1, 0.3, 1);
     }
 
     #pointer {
@@ -49,8 +35,24 @@
       z-index: 10;
     }
 
+    svg {
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+      transition: transform 3s ease-out;
+      transform-origin: center center;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    text {
+      fill: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      pointer-events: none;
+    }
+
     button {
-      margin-top: 30px;
+      margin-top: 20px;
       padding: 15px 40px;
       font-size: 18px;
       background: #16a085;
@@ -73,12 +75,12 @@
 
     #modal-content {
       background: #fff;
-      padding: 30px 20px;
+      padding: 30px;
       border-radius: 12px;
       text-align: center;
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 80%;
       max-width: 300px;
-      width: 100%;
     }
 
     #modal-content p {
@@ -103,7 +105,6 @@
     <div id="pointer"></div>
 
     <svg id="wheel" viewBox="0 0 500 500">
-      <!-- 6 Secciones -->
       <g id="slices">
         <path d="M250,250 L250,0 A250,250 0 0,1 466,125 Z" fill="#16a085"></path>
         <path d="M250,250 L466,125 A250,250 0 0,1 404,404 Z" fill="#2980b9"></path>
@@ -142,17 +143,16 @@
 
     spinBtn.addEventListener("click", () => {
       if (spinning) return;
-
       spinning = true;
-      const firstSpin = Math.floor(Math.random() * 360 + 360 * 3);
-      wheel.style.transition = "transform 3s ease-out";
-      wheel.style.transform = `rotate(${firstSpin}deg)`;
+
+      const randomSpin = Math.floor(Math.random() * 360 + 360 * 3);
+      wheel.style.transition = "transform 2s ease-out";
+      wheel.style.transform = `rotate(${randomSpin}deg)`;
 
       setTimeout(() => {
-        // Ajuste a “Cita con Pachuca” (primer sector)
-        const extra = 360 * 2 + 30; // Ajuste al ángulo deseado
+        const adjust = 360 * 2 + 30; // 30º = primer sector (Cita con Pachuca)
         wheel.style.transition = "transform 2.5s ease-in-out";
-        wheel.style.transform = `rotate(${firstSpin + extra}deg)`;
+        wheel.style.transform = `rotate(${randomSpin + adjust}deg)`;
 
         setTimeout(() => {
           modal.style.display = "flex";
