@@ -75,6 +75,7 @@
       text-align: center;
     }
 
+    /* Modal */
     #modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -126,8 +127,10 @@
 <button id="spin-btn">Girar</button>
 <div id="result">Listo para girar</div>
 
+<!-- Sonido -->
 <audio id="ruleta-sound" src="https://www.soundjay.com/misc/sounds/slot-machine-1.mp3" preload="auto"></audio>
 
+<!-- Modal -->
 <div id="modal">
   <div id="modal-content">
     <p>🎉 Ganaste: Cita con Pachuca 🎉</p>
@@ -135,7 +138,6 @@
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
   const sectorsData = [
     { color: '#16a085', label: 'Cita con Pachuca' },
@@ -202,7 +204,7 @@
     if (instantReset) {
       svg.style.transition = 'none';
       svg.style.transform = 'rotate(0deg)';
-      svg.offsetHeight;
+      svg.offsetHeight; // trigger reflow
     }
 
     svg.style.transition = `transform ${duration}s ${easing}`;
@@ -214,7 +216,9 @@
   spinBtn.addEventListener('click', async () => {
     if (spinning) return;
     spinning = true;
+    spinBtn.disabled = true; // deshabilitar mientras gira
     result.textContent = 'Girando...';
+
     try {
       await ruletaSound.play();
     } catch (e) {
@@ -245,7 +249,8 @@
             ruletaSound.currentTime = 0;
             result.textContent = `🎉 Ganaste: ${sectorsData[citaIndex].label} 🎉`;
             spinning = false;
-            spinBtn.textContent = 'Volver a girar';
+            spinBtn.disabled = false;
+            spinBtn.textContent = "Volver a girar";
 
             if (sectorsData[citaIndex].label === 'Cita con Pachuca') {
               modal.style.display = 'flex';
@@ -259,16 +264,6 @@
 
   acceptBtn.addEventListener('click', () => {
     modal.style.display = 'none';
-
-    html2canvas(document.body).then(canvas => {
-      canvas.toBlob(blob => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = `https://wa.me/?text=Mira lo que gané 🎉%0A${encodeURIComponent(url)}`;
-        link.target = '_blank';
-        link.click();
-      });
-    });
   });
 </script>
 
